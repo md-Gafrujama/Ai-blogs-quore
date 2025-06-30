@@ -8,7 +8,7 @@ const BlogCard = ({ blog }) => {
   return (
     <article 
       onClick={() => navigate(`/blog/${_id}`)}
-      className="group relative w-full max-w-sm mx-auto bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border border-gray-100 hover:border-transparent transition-all duration-700 cursor-pointer transform hover:-translate-y-2 hover:rotate-1"
+      className="group relative w-full bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border border-gray-100 hover:border-transparent transition-all duration-700 cursor-pointer transform hover:-translate-y-2 hover:rotate-1 min-w-[300px] max-w-[400px] mx-auto lg:mx-0"
       style={{ 
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
         backdropFilter: 'blur(10px)'
@@ -117,6 +117,40 @@ const BlogCard = ({ blog }) => {
       <div className="absolute top-8 right-8 w-1 h-1 bg-blue-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1000 transform scale-0 group-hover:scale-100 group-hover:animate-ping"></div>
       <div className="absolute bottom-8 left-8 w-1 h-1 bg-purple-400 rounded-full opacity-0 group-hover:opacity-40 transition-all duration-1200 delay-300 transform scale-0 group-hover:scale-100 group-hover:animate-pulse"></div>
     </article>
+  );
+};
+
+// BlogContainer component for proper 3-card layout
+export const BlogContainer = ({ blogs }) => {
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Header Section */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Latest Blog Posts
+        </h2>
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          Discover insights, tips, and stories from our expert team
+        </p>
+      </div>
+
+      {/* Blog Grid - Guaranteed 3 cards per row on desktop */}
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 place-items-center lg:place-items-stretch">
+        {blogs?.map((blog) => (
+          <BlogCard key={blog._id} blog={blog} />
+        ))}
+      </div>
+
+      {/* Load More Section */}
+      <div className="text-center mt-16">
+        <button className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-full hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <span>Load More Articles</span>
+          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 };
 
