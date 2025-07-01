@@ -11,7 +11,7 @@ import { FiShare2, FiMessageSquare, FiClock, FiUser } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 const Blog = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { axios } = useAppContext();
   const [data, setData] = useState(null);
   const [comments, setComments] = useState([]);
@@ -23,7 +23,7 @@ const Blog = () => {
   const fetchBlogData = async () => {
     setIsLoading(true);
     try {
-      const { data } = await axios.get(`/api/blog/${id}`);
+      const { data } = await axios.get(`/api/blog/slug/${slug}`);
       if (data.success) {
         setData(data.blog);
       } else {
@@ -38,7 +38,7 @@ const Blog = () => {
 
   const fetchComments = async () => {
     try {
-      const { data } = await axios.post('/api/blog/comments', { blogId: id });
+      const { data } = await axios.post('/api/blog/comments', { blogSlug: slug });
       if (data.success) {
         setComments(data.comments);
       } else {
@@ -59,7 +59,7 @@ const Blog = () => {
     setIsSubmitting(true);
     try {
       const { data } = await axios.post('/api/blog/add-comment', { 
-        blog: id, 
+        blogSlug: slug, 
         name, 
         content 
       });
@@ -100,7 +100,7 @@ const Blog = () => {
   useEffect(() => {
     fetchBlogData();
     fetchComments();
-  }, [id]);
+  }, [slug]);
 
   if (isLoading || !data) return <Loader />;
 

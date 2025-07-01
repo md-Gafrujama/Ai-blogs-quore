@@ -1,13 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Helper function to slugify the blog title
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^a-z0-9\-]/g, '')    // Remove all non-alphanumeric chars except -
+    .replace(/\-+/g, '-')           // Replace multiple - with single -
+    .replace(/^-+/, '')              // Trim - from start of text
+    .replace(/-+$/, '');             // Trim - from end of text
+}
+
 const BlogCard = ({ blog }) => {
   const { title, description, category, image, _id } = blog;
   const navigate = useNavigate();
 
   return (
     <article 
-      onClick={() => navigate(`/blog/${_id}`)}
+      onClick={() => navigate(`/blog/${slugify(title)}`)}
       className="group relative w-full bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl border border-gray-100 hover:border-transparent transition-all duration-700 cursor-pointer transform hover:-translate-y-2 hover:rotate-1"
       style={{ 
         background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',

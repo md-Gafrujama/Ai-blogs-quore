@@ -4,6 +4,18 @@ import Blog from '../models/Blog.js';
 import Comment from '../models/Comment.js';
 import main from '../configs/gemini.js';
 
+// Helper function to slugify the blog title
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^a-z0-9\-]/g, '')    // Remove all non-alphanumeric chars except -
+    .replace(/\-+/g, '-')           // Replace multiple - with single -
+    .replace(/^-+/, '')              // Trim - from start of text
+    .replace(/-+$/, '');             // Trim - from end of text
+}
+
 export const addBlog = async (req, res)=>{
     try {
         const {title, subTitle, description, category, isPublished} = JSON.parse(req.body.blog);
@@ -34,8 +46,9 @@ export const addBlog = async (req, res)=>{
         });
 
         const image = optimizedImageUrl;
+        const slug = slugify(title);
 
-        await Blog.create({title, subTitle, description, category, image, isPublished})
+        await Blog.create({title, subTitle, description, category, image, isPublished, slug})
 
         res.json({success: true, message: "Blog added successfully"})
 
@@ -119,6 +132,19 @@ export const generateContent = async (req, res)=>{
         const {prompt} = req.body;
         const content = await main(prompt + ' Generate a blog content for this topic in simple text format')
         res.json({success: true, content})
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+}
+
+export const getBlogBySlug = async (req, res) =>{
+    try {
+        const { slug } = req.params;
+        const blog = await Blog.findOne({ slug });
+        if(!blog){
+            return res.json({ success: false, message: "Blog not found" });
+        }
+        res.json({success: true, blog})
     } catch (error) {
         res.json({success: false, message: error.message})
     }
