@@ -58,18 +58,18 @@ const Blog = () => {
     
     setIsSubmitting(true);
     try {
-      const { data } = await axios.post('/api/blog/add-comment', { 
-        blogSlug: slug, 
+      const { data: commentData } = await axios.post('/api/blog/add-comment', { 
+        blog: data._id, 
         name, 
         content 
       });
-      if (data.success) {
-        toast.success(data.message);
+      if (commentData.success) {
+        toast.success(commentData.message);
         setName('');
         setContent('');
         await fetchComments();
       } else {
-        toast.error(data.message);
+        toast.error(commentData.message);
       }
     } catch (error) {
       toast.error(error.message);

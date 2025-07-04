@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Helper function to slugify the blog title
+
 function slugify(text) {
   return text
     .toString()
