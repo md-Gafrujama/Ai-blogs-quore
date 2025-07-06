@@ -119,8 +119,16 @@ export const addComment = async (req, res) =>{
 
 export const getBlogComments = async (req, res) =>{
     try {
-        const {blogId } = req.body;
-        const comments = await Comment.find({blog: blogId, isApproved: true}).sort({createdAt: -1});
+        const {blogSlug } = req.body;
+        
+        const blog = await Blog.findOne({ slug: blogSlug });
+
+        if (!blog) 
+        {
+            return res.json({success: false, message: "Blog not found"});
+        }
+        
+        const comments = await Comment.find({blog: blog._id, isApproved: true}).sort({createdAt: -1});
         res.json({success: true, comments})
     } catch (error) {
         res.json({success: false, message: error.message})
